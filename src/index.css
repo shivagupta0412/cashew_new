@@ -347,71 +347,6 @@ html {
   overflow: hidden;
 }
 
-.premium-glass-card::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(251, 191, 36, 0.1),
-    transparent
-  );
-  transform: rotate(45deg) translate(-100%, -100%);
-  transition: transform 0.6s ease;
-  pointer-events: none;
-}
-
-.premium-glass-card:hover::after {
-  transform: rotate(45deg) translate(100%, 100%);
-}
-
-.premium-product-card::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(234, 88, 12, 0.15),
-    transparent
-  );
-  transform: rotate(45deg) translate(-100%, -100%);
-  transition: transform 0.8s ease;
-  pointer-events: none;
-}
-
-.premium-product-card:hover::after {
-  transform: rotate(45deg) translate(100%, 100%);
-}
-
-.premium-feature-card::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent,
-    rgba(220, 38, 38, 0.1),
-    transparent
-  );
-  transform: rotate(45deg) translate(-100%, -100%);
-  transition: transform 0.7s ease;
-  pointer-events: none;
-}
-
-.premium-feature-card:hover::after {
-  transform: rotate(45deg) translate(100%, 100%);
-}
 
 /* Magnetic Hover Effect */
 .magnetic-hover {
@@ -419,141 +354,14 @@ html {
 }
 
 /* Enhanced Button Effects */
-.premium-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.premium-button:hover::before {
-  left: 100%;
-}
-
-.premium-button-primary::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: left 0.6s ease;
-}
-
-.premium-button-primary:hover::after {
-  left: 100%;
-}
 
 /* Ripple Effect */
-@keyframes ripple {
-  0% {
-    transform: scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-.ripple-effect {
-  position: relative;
-  overflow: hidden;
-}
-
-.ripple-effect::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.ripple-effect:active::before {
-  width: 300px;
-  height: 300px;
-}
 
 /* Card Shimmer Effect */
-@keyframes shimmer-card {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.card-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.card-shimmer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(251, 191, 36, 0.1),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: shimmer-card 3s infinite;
-  pointer-events: none;
-}
 
 /* Floating Animation */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.float-animation {
-  animation: float 3s ease-in-out infinite;
-}
 
 /* Pulse Glow Effect */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(251, 191, 36, 0.6);
-  }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
 
 /* Gradient Text Effects */
 .gradient-text-amber {
@@ -582,20 +390,6 @@ html {
 }
 
 /* Pulse Animation for Special Elements */
-@keyframes pulse-amber {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-.animate-pulse-amber {
-  animation: pulse-amber 2s ease-in-out infinite;
-}
 
 /* 3D Transform Utilities */
 .preserve-3d {

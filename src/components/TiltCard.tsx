@@ -4,10 +4,10 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 interface TiltCardProps {
   children: React.ReactNode;
   className?: string;
-  tiltStrength?: number;
+  disabled?: boolean;
 }
 
-const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', tiltStrength = 15 }) => {
+const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', disabled = false }) => {
   const ref = useRef<HTMLDivElement>(null);
   
   const x = useMotionValue(0);
@@ -16,11 +16,11 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', tiltStren
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
   
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [tiltStrength, -tiltStrength]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-tiltStrength, tiltStrength]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], [3, -3]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], [-3, 3]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (!ref.current || disabled) return;
     
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
@@ -37,25 +37,27 @@ const TiltCard: React.FC<TiltCardProps> = ({ children, className = '', tiltStren
   };
 
   const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    if (!disabled) {
+      x.set(0);
+      y.set(0);
+    }
   };
 
   return (
     <motion.div
       ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={disabled ? undefined : handleMouseMove}
+      onMouseLeave={disabled ? undefined : handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: disabled ? 0 : rotateX,
+        rotateY: disabled ? 0 : rotateY,
         transformStyle: "preserve-3d",
       }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={disabled ? {} : { scale: 1.01 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className={`magnetic-hover ${className}`}
     >
-      <div style={{ transform: "translateZ(50px)" }}>
+      <div style={{ transform: disabled ? "none" : "translateZ(20px)" }}>
         {children}
       </div>
     </motion.div>
