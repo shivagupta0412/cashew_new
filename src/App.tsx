@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Star, ShoppingCart, Heart, Zap, Award, Users, Truck, User, Search, Menu, X, Filter, ArrowRight, Plus, Minus } from 'lucide-react';
+import { ChevronDown, Star, ShoppingCart, Heart, Zap, Award, Users, Truck, User, Search, Menu, X, Filter, ArrowRight, Plus, Minus, ArrowLeft, Trash2 } from 'lucide-react';
 
 // Components
 import LoadingScreen from './components/LoadingScreen';
@@ -26,6 +26,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [productQuantities, setProductQuantities] = useState<{[key: string]: number}>({});
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [showCart, setShowCart] = useState(false);
   const [authForm, setAuthForm] = useState({
     name: '',
     email: '',
@@ -68,80 +70,146 @@ function App() {
     {
       id: '1',
       name: "Premium Almonds",
-      price: 2074, // 24.99 * 83
-      originalPrice: 2489, // 29.99 * 83
+      price: 2074,
+      originalPrice: 2489,
       image: "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=600",
       rating: 4.9,
       reviews: 156,
       badge: "Best Seller",
       discount: "17% OFF",
       category: "nuts",
-      description: "Premium California almonds, rich in protein and healthy fats. Perfect for snacking or cooking."
+      description: "Premium California almonds, rich in protein and healthy fats. Perfect for snacking or cooking.",
+      detailedDescription: "Our premium California almonds are carefully selected from the finest orchards. These nutrient-dense nuts are packed with vitamin E, magnesium, and healthy monounsaturated fats. Perfect for heart health and brain function.",
+      nutritionFacts: {
+        calories: 164,
+        protein: "6g",
+        fat: "14g",
+        carbs: "6g",
+        fiber: "4g"
+      },
+      benefits: ["Heart Health", "Brain Function", "Weight Management", "Skin Health"],
+      weight: "500g",
+      origin: "California, USA"
     },
     {
       id: '2',
       name: "Roasted Cashews",
-      price: 2406, // 28.99 * 83
-      originalPrice: 2904, // 34.99 * 83
+      price: 2406,
+      originalPrice: 2904,
       image: "https://images.pexels.com/photos/4113643/pexels-photo-4113643.jpeg?auto=compress&cs=tinysrgb&w=600",
       rating: 4.8,
       reviews: 203,
       badge: "Premium",
       discount: "17% OFF",
       category: "nuts",
-      description: "Perfectly roasted cashews with a buttery texture and rich flavor. Ideal for healthy snacking."
+      description: "Perfectly roasted cashews with a buttery texture and rich flavor. Ideal for healthy snacking.",
+      detailedDescription: "These premium cashews are roasted to perfection, offering a creamy texture and rich, buttery flavor. Sourced from the finest cashew trees and processed with care to maintain their natural goodness.",
+      nutritionFacts: {
+        calories: 157,
+        protein: "5g",
+        fat: "12g",
+        carbs: "9g",
+        fiber: "1g"
+      },
+      benefits: ["Bone Health", "Heart Health", "Immune Support", "Energy Boost"],
+      weight: "500g",
+      origin: "Kerala, India"
     },
     {
       id: '3',
       name: "Mixed Nuts Deluxe",
-      price: 2738, // 32.99 * 83
-      originalPrice: 3319, // 39.99 * 83
+      price: 2738,
+      originalPrice: 3319,
       image: "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=600",
       rating: 4.9,
       reviews: 189,
       badge: "Chef's Choice",
       discount: "18% OFF",
       category: "mixed",
-      description: "A premium blend of almonds, cashews, walnuts, and pistachios. The perfect healthy mix."
+      description: "A premium blend of almonds, cashews, walnuts, and pistachios. The perfect healthy mix.",
+      detailedDescription: "Our signature blend combines the finest almonds, cashews, walnuts, and pistachios in perfect proportions. Each nut is carefully selected and processed to ensure optimal taste and nutrition.",
+      nutritionFacts: {
+        calories: 168,
+        protein: "6g",
+        fat: "15g",
+        carbs: "7g",
+        fiber: "3g"
+      },
+      benefits: ["Complete Nutrition", "Antioxidants", "Healthy Fats", "Protein Power"],
+      weight: "500g",
+      origin: "Mixed Origins"
     },
     {
       id: '4',
       name: "Honey Roasted Walnuts",
-      price: 2240, // 26.99 * 83
-      originalPrice: 2655, // 31.99 * 83
+      price: 2240,
+      originalPrice: 2655,
       image: "https://images.pexels.com/photos/4113643/pexels-photo-4113643.jpeg?auto=compress&cs=tinysrgb&w=600",
       rating: 4.7,
       reviews: 142,
       badge: "Limited",
       discount: "16% OFF",
       category: "nuts",
-      description: "Walnuts roasted with pure honey, creating a perfect balance of sweet and nutty flavors."
+      description: "Walnuts roasted with pure honey, creating a perfect balance of sweet and nutty flavors.",
+      detailedDescription: "Premium walnuts carefully roasted with pure wildflower honey. These brain-shaped nuts are rich in omega-3 fatty acids and provide a delightful sweet and nutty flavor combination.",
+      nutritionFacts: {
+        calories: 185,
+        protein: "4g",
+        fat: "18g",
+        carbs: "4g",
+        fiber: "2g"
+      },
+      benefits: ["Brain Health", "Omega-3 Rich", "Heart Health", "Anti-inflammatory"],
+      weight: "400g",
+      origin: "Kashmir, India"
     },
     {
       id: '5',
       name: "Dried Dates Premium",
-      price: 1908, // 22.99 * 83
-      originalPrice: 2323, // 27.99 * 83
+      price: 1908,
+      originalPrice: 2323,
       image: "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&w=600",
       rating: 4.8,
       reviews: 98,
       badge: "Organic",
       discount: "18% OFF",
       category: "dates",
-      description: "Organic Medjool dates, naturally sweet and packed with fiber, potassium, and antioxidants."
+      description: "Organic Medjool dates, naturally sweet and packed with fiber, potassium, and antioxidants.",
+      detailedDescription: "Premium organic Medjool dates, known as the 'king of dates'. These large, soft dates are naturally sweet and provide sustained energy. Rich in fiber, potassium, and antioxidants.",
+      nutritionFacts: {
+        calories: 66,
+        protein: "0.4g",
+        fat: "0.1g",
+        carbs: "18g",
+        fiber: "1.6g"
+      },
+      benefits: ["Natural Energy", "Digestive Health", "Bone Health", "Antioxidants"],
+      weight: "500g",
+      origin: "Medjool, Morocco"
     },
     {
       id: '6',
       name: "Pistachios Roasted",
-      price: 2987, // 35.99 * 83
-      originalPrice: 3568, // 42.99 * 83
+      price: 2987,
+      originalPrice: 3568,
       image: "https://images.pexels.com/photos/4113643/pexels-photo-4113643.jpeg?auto=compress&cs=tinysrgb&w=600",
       rating: 4.9,
       reviews: 234,
       badge: "Premium",
       discount: "16% OFF",
       category: "nuts",
-      description: "Premium roasted pistachios with a distinctive flavor and satisfying crunch. Rich in protein."
+      description: "Premium roasted pistachios with a distinctive flavor and satisfying crunch. Rich in protein.",
+      detailedDescription: "Premium Iranian pistachios, roasted to perfection. These emerald gems offer a unique flavor profile and satisfying crunch. Rich in protein, healthy fats, and antioxidants.",
+      nutritionFacts: {
+        calories: 159,
+        protein: "6g",
+        fat: "13g",
+        carbs: "8g",
+        fiber: "3g"
+      },
+      benefits: ["Eye Health", "Heart Health", "Weight Management", "Antioxidants"],
+      weight: "500g",
+      origin: "Kerman, Iran"
     }
   ];
 
@@ -176,7 +244,6 @@ function App() {
     }));
     const product = products.find(p => p.id === productId);
     showNotificationMessage(`${quantity} x ${product?.name} added to cart!`);
-    // Reset quantity selector
     setProductQuantities(prev => ({ ...prev, [productId]: 1 }));
   };
 
@@ -190,6 +257,16 @@ function App() {
       }
       return newCart;
     });
+  };
+
+  const removeItemCompletely = (productId: string) => {
+    setCartItems(prev => {
+      const newCart = { ...prev };
+      delete newCart[productId];
+      return newCart;
+    });
+    const product = products.find(p => p.id === productId);
+    showNotificationMessage(`${product?.name} removed from cart`);
   };
 
   const toggleWishlist = (productId: string) => {
@@ -230,7 +307,7 @@ function App() {
 
   const updateProductQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) quantity = 1;
-    if (quantity > 10) quantity = 10; // Max limit
+    if (quantity > 10) quantity = 10;
     setProductQuantities(prev => ({ ...prev, [productId]: quantity }));
   };
 
@@ -258,6 +335,293 @@ function App() {
     duration: 0.6
   };
 
+  // Product Details Modal
+  const ProductDetailsModal = () => {
+    const product = products.find(p => p.id === selectedProduct);
+    if (!product) return null;
+
+    return (
+      <AnimatePresence>
+        {selectedProduct && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setSelectedProduct(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="premium-glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Product Image */}
+                <div className="relative">
+                  <button 
+                    onClick={() => setSelectedProduct(null)}
+                    className="absolute top-4 right-4 z-10 p-2 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                  <span className="absolute top-4 left-4 z-10 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full text-xs font-semibold text-white">
+                    {product.badge}
+                  </span>
+                  <span className="absolute top-16 left-4 z-10 px-2 py-1 bg-red-500 rounded-lg text-xs font-semibold text-white">
+                    {product.discount}
+                  </span>
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-80 object-cover rounded-xl"
+                  />
+                </div>
+
+                {/* Product Details */}
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-amber-100 mb-2">{product.name}</h2>
+                    <div className="flex items-center space-x-2 mb-4">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'text-amber-400 fill-current' : 'text-amber-400/30'}`} />
+                        ))}
+                      </div>
+                      <span className="text-amber-300/70">({product.reviews} reviews)</span>
+                    </div>
+                    <p className="text-amber-200/80 leading-relaxed">{product.detailedDescription}</p>
+                  </div>
+
+                  {/* Price */}
+                  <div className="flex items-center space-x-3">
+                    <span className="text-3xl font-bold text-amber-400">₹{product.price.toLocaleString('en-IN')}</span>
+                    <span className="text-xl text-amber-300/50 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="premium-glass-card p-3">
+                      <span className="text-amber-300/70">Weight:</span>
+                      <span className="text-amber-100 font-semibold ml-2">{product.weight}</span>
+                    </div>
+                    <div className="premium-glass-card p-3">
+                      <span className="text-amber-300/70">Origin:</span>
+                      <span className="text-amber-100 font-semibold ml-2">{product.origin}</span>
+                    </div>
+                  </div>
+
+                  {/* Nutrition Facts */}
+                  <div className="premium-glass-card p-4">
+                    <h4 className="text-amber-100 font-semibold mb-3">Nutrition Facts (per 30g)</h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-amber-300/70">Calories:</span>
+                        <span className="text-amber-100">{product.nutritionFacts.calories}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-amber-300/70">Protein:</span>
+                        <span className="text-amber-100">{product.nutritionFacts.protein}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-amber-300/70">Fat:</span>
+                        <span className="text-amber-100">{product.nutritionFacts.fat}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-amber-300/70">Carbs:</span>
+                        <span className="text-amber-100">{product.nutritionFacts.carbs}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Benefits */}
+                  <div>
+                    <h4 className="text-amber-100 font-semibold mb-3">Health Benefits</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {product.benefits.map((benefit, index) => (
+                        <span key={index} className="px-3 py-1 bg-amber-500/20 text-amber-200 rounded-full text-sm">
+                          {benefit}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Quantity and Add to Cart */}
+                  <div className="flex items-center justify-between pt-4 border-t border-amber-300/20">
+                    <div className="flex items-center space-x-3 bg-amber-900/30 rounded-lg p-2">
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => updateProductQuantity(product.id, getProductQuantity(product.id) - 1)}
+                        className="w-8 h-8 bg-amber-600/40 rounded-full hover:bg-amber-600/60 transition-colors flex items-center justify-center"
+                      >
+                        <Minus className="w-4 h-4 text-amber-200" />
+                      </motion.button>
+                      <span className="text-amber-100 font-semibold min-w-[30px] text-center">
+                        {getProductQuantity(product.id)}
+                      </span>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => updateProductQuantity(product.id, getProductQuantity(product.id) + 1)}
+                        className="w-8 h-8 bg-amber-600/40 rounded-full hover:bg-amber-600/60 transition-colors flex items-center justify-center"
+                      >
+                        <Plus className="w-4 h-4 text-amber-200" />
+                      </motion.button>
+                    </div>
+                    
+                    <div className="flex space-x-3">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => toggleWishlist(product.id)}
+                        className="premium-button p-3 rounded-lg"
+                      >
+                        <Heart className={`w-5 h-5 ${wishlist.includes(product.id) ? 'text-red-500 fill-current' : 'text-amber-200'}`} />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          addToCart(product.id, getProductQuantity(product.id));
+                          setSelectedProduct(null);
+                        }}
+                        className="premium-button-primary px-6 py-3 rounded-lg flex items-center font-semibold"
+                      >
+                        <ShoppingCart className="w-5 h-5 mr-2" />
+                        Add to Cart
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  };
+
+  // Cart Modal
+  const CartModal = () => (
+    <AnimatePresence>
+      {showCart && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          onClick={() => setShowCart(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, x: 300 }}
+            animate={{ scale: 1, opacity: 1, x: 0 }}
+            exit={{ scale: 0.9, opacity: 0, x: 300 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="premium-glass-card max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center p-6 border-b border-amber-300/20">
+              <h2 className="text-2xl font-bold text-amber-100">Shopping Cart</h2>
+              <button 
+                onClick={() => setShowCart(false)}
+                className="text-amber-200 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6">
+              {Object.keys(cartItems).length === 0 ? (
+                <div className="text-center py-8">
+                  <ShoppingCart className="w-16 h-16 text-amber-300/50 mx-auto mb-4" />
+                  <p className="text-amber-200/70">Your cart is empty</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {Object.entries(cartItems).map(([productId, quantity]) => {
+                    const product = products.find(p => p.id === productId);
+                    if (!product) return null;
+                    
+                    return (
+                      <motion.div
+                        key={productId}
+                        layout
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="flex items-center space-x-4 p-4 bg-amber-900/20 rounded-lg"
+                      >
+                        <img 
+                          src={product.image} 
+                          alt={product.name}
+                          className="w-16 h-16 object-cover rounded-lg"
+                        />
+                        <div className="flex-1">
+                          <h4 className="text-amber-100 font-semibold text-sm">{product.name}</h4>
+                          <p className="text-amber-400 font-bold">₹{product.price.toLocaleString('en-IN')}</p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => removeFromCart(productId)}
+                            className="w-6 h-6 bg-amber-600/40 rounded-full hover:bg-amber-600/60 transition-colors flex items-center justify-center"
+                          >
+                            <Minus className="w-3 h-3 text-amber-200" />
+                          </motion.button>
+                          <span className="text-amber-100 font-semibold min-w-[20px] text-center text-sm">
+                            {quantity}
+                          </span>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => addToCart(productId, 1)}
+                            className="w-6 h-6 bg-amber-600/40 rounded-full hover:bg-amber-600/60 transition-colors flex items-center justify-center"
+                          >
+                            <Plus className="w-3 h-3 text-amber-200" />
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => removeItemCompletely(productId)}
+                            className="w-6 h-6 bg-red-600/40 rounded-full hover:bg-red-600/60 transition-colors flex items-center justify-center ml-2"
+                          >
+                            <Trash2 className="w-3 h-3 text-red-200" />
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            
+            {Object.keys(cartItems).length > 0 && (
+              <div className="p-6 border-t border-amber-300/20">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-amber-200 font-semibold">Total:</span>
+                  <span className="text-2xl font-bold text-amber-400">
+                    ₹{getTotalPrice().toLocaleString('en-IN')}
+                  </span>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full premium-button-primary py-3 rounded-lg font-semibold"
+                >
+                  Proceed to Checkout
+                </motion.button>
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   const AuthModal = () => (
     <AnimatePresence>
       {showAuthModal && (
@@ -265,25 +629,29 @@ function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          onClick={() => setShowAuthModal(false)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="premium-glass-card max-w-md w-full mx-4 p-8"
+            className="premium-glass-card max-w-md w-full p-8"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-amber-100">
                 {authMode === 'signin' ? 'Sign In' : 'Sign Up'}
               </h2>
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setShowAuthModal(false)}
                 className="text-amber-200 hover:text-white transition-colors"
               >
                 <X className="w-6 h-6" />
-              </button>
+              </motion.button>
             </div>
             
             <form onSubmit={handleAuthSubmit} className="space-y-4">
@@ -349,12 +717,14 @@ function App() {
             <div className="mt-6 text-center">
               <p className="text-amber-200/70">
                 {authMode === 'signin' ? "Don't have an account?" : "Already have an account?"}
-                <button 
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setAuthMode(authMode === 'signin' ? 'signup' : 'signin')}
                   className="ml-2 text-amber-400 hover:text-amber-300 font-semibold"
                 >
                   {authMode === 'signin' ? 'Sign Up' : 'Sign In'}
-                </button>
+                </motion.button>
               </p>
             </div>
           </motion.div>
@@ -370,13 +740,15 @@ function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/50 backdrop-blur-sm p-4"
+          onClick={() => setShowSearch(false)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0, y: -20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: -20 }}
-            className="premium-glass-card max-w-2xl w-full mx-4 p-6"
+            className="premium-glass-card max-w-2xl w-full p-6"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center space-x-4 mb-4">
               <Search className="w-6 h-6 text-amber-400" />
@@ -401,6 +773,10 @@ function App() {
                   <motion.div
                     key={product.id}
                     whileHover={{ scale: 1.02, x: 10 }}
+                    onClick={() => {
+                      setSelectedProduct(product.id);
+                      setShowSearch(false);
+                    }}
                     className="flex items-center space-x-3 p-3 hover:bg-amber-100/10 rounded-lg cursor-pointer"
                   >
                     <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-lg" />
@@ -425,13 +801,15 @@ function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          onClick={() => setShowFilter(false)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="premium-glass-card max-w-md w-full mx-4 p-6"
+            className="premium-glass-card max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-bold text-amber-100">Filter Products</h3>
@@ -451,6 +829,7 @@ function App() {
                     <motion.button
                       key={category.id}
                       whileHover={{ scale: 1.02, x: 5 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => {
                         setSelectedCategory(category.id);
                         setShowFilter(false);
@@ -584,6 +963,7 @@ function App() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection(item.id)}
                   className="relative text-amber-200/80 hover:text-amber-100 transition-all duration-300 nav-link"
                 >
@@ -614,6 +994,7 @@ function App() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setShowCart(true)}
                 className="premium-button-primary px-4 py-2 rounded-lg flex items-center relative"
               >
                 <ShoppingCart className="w-4 h-4 mr-2" />
@@ -671,6 +1052,7 @@ function App() {
                   <div className="flex flex-col space-y-2 pt-4 border-t border-amber-300/20">
                     <motion.button
                       whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => {
                         setShowSearch(true);
                         setIsMenuOpen(false);
@@ -682,6 +1064,7 @@ function App() {
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => {
                         setShowAuthModal(true);
                         setIsMenuOpen(false);
@@ -692,6 +1075,11 @@ function App() {
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setShowCart(true);
+                        setIsMenuOpen(false);
+                      }}
                       className="premium-button-primary px-4 py-2 rounded-lg flex items-center justify-between"
                     >
                       <span>Cart</span>
@@ -900,8 +1288,11 @@ function App() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                 >
-                  <TiltCard className="premium-product-card group">
-                    <div className="relative overflow-hidden rounded-2xl mb-4">
+                  <TiltCard className="premium-product-card group cursor-pointer">
+                    <div 
+                      className="relative overflow-hidden rounded-2xl mb-4"
+                      onClick={() => setSelectedProduct(product.id)}
+                    >
                       <span className="absolute top-4 left-4 z-10 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full text-xs font-semibold text-white">
                         {product.badge}
                       </span>
@@ -917,7 +1308,10 @@ function App() {
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => toggleWishlist(product.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWishlist(product.id);
+                        }}
                         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 bg-white/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
                       >
                         <Heart className={`w-6 h-6 ${wishlist.includes(product.id) ? 'text-red-500 fill-current' : 'text-white'}`} />
@@ -925,7 +1319,12 @@ function App() {
                     </div>
                     
                     <div className="space-y-3">
-                      <h3 className="text-xl font-bold text-amber-100">{product.name}</h3>
+                      <h3 
+                        className="text-xl font-bold text-amber-100 cursor-pointer hover:text-amber-200 transition-colors"
+                        onClick={() => setSelectedProduct(product.id)}
+                      >
+                        {product.name}
+                      </h3>
                       <p className="text-amber-200/60 text-sm">{product.description}</p>
                       <div className="flex items-center space-x-2">
                         <div className="flex items-center">
@@ -1068,25 +1467,6 @@ function App() {
         </div>
       </section>
 
-      {/* Cart Summary */}
-      <AnimatePresence>
-        {getTotalCartItems() > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 100 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 100 }}
-            className="fixed bottom-4 right-4 z-40 premium-glass-card p-4"
-          >
-            <div className="text-amber-100 font-semibold mb-2">
-              Cart: {getTotalCartItems()} items
-            </div>
-            <div className="text-amber-400 font-bold text-lg">
-              Total: ₹{getTotalPrice().toLocaleString('en-IN')}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Footer */}
       <footer className="relative z-10 py-12 px-6 border-t border-amber-300/10">
         <div className="max-w-7xl mx-auto">
@@ -1126,6 +1506,7 @@ function App() {
                       <motion.button
                         key={link.name}
                         whileHover={{ x: 5 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => link.id && scrollToSection(link.id)}
                         className="block text-amber-300/60 hover:text-amber-200 transition-colors text-left"
                       >
@@ -1144,6 +1525,8 @@ function App() {
       </footer>
 
       {/* Modals */}
+      <ProductDetailsModal />
+      <CartModal />
       <AuthModal />
       <SearchModal />
       <FilterModal />
